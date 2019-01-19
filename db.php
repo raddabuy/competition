@@ -17,18 +17,18 @@
     $query = $pdo->prepare($sql);
     $query->execute([$name, $score, $sex]);
 
-    if($sex == 'male')
-    {
-      $sql = 'INSERT INTO male(name, score) VALUES(?, ?)';
+
+
+      $sql = 'INSERT INTO ' .$sex. '(name, score) VALUES(?, ?)';
       $query = $pdo->prepare($sql);
       $query->execute([$name, $score]);
-    }
-    else if($sex == 'female')
+
+    /*else if($sex == 'female')
     {
       $sql = 'INSERT INTO female(name, score) VALUES(?, ?)';
       $query = $pdo->prepare($sql);
       $query->execute([$name, $score]);
-    }
+    }*/
 
     header('Location:index.php');
 
