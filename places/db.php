@@ -61,20 +61,63 @@
                     $query->execute([$name, $score]);}
 
     //делаем смещения в таблицах, если произошло переполнение
-    $sql_gold = 'SELECT * FROM `gold`';
+    $sql_gold = 'SELECT * FROM `gold` ORDER BY `score` ASC';
     $query_gold  = $pdo->prepare($sql_gold);
     $query_gold ->execute();
     $num_gold  = $query_gold ->rowCount();
 
-    $sql_silver = 'SELECT * FROM `silver`';
-    $query_silver = $pdo->prepare($sql_silver);
+    $sql_silver = 'SELECT * FROM `silver` ORDER BY `score` ASC';
+    $query_silver  = $pdo->prepare($sql_silver);
     $query_silver ->execute();
     $num_silver  = $query_silver ->rowCount();
 
-    $sql_bronze = 'SELECT * FROM `bronze`';
+    $sql_bronze = 'SELECT * FROM `bronze` ORDER BY `score` ASC';
     $query_bronze  = $pdo->prepare($sql_bronze);
     $query_bronze ->execute();
     $num_bronze  = $query_bronze ->rowCount();
+
+    if ($num_gold > 2) {
+
+      //  $sql_gold =$pdo->query("SELECT * FROM 'gold' WHERE 'score' = ?");
+      //  $query_gold  = $pdo->prepare($sql_gold);
+        //$query_gold ->execute(['score' => $min_gold]);
+        $row = $query_gold->fetch(PDO::FETCH_ASSOC);
+        $sql = 'INSERT INTO silver(name, score) VALUES(?, ?)';
+        $query = $pdo->prepare($sql);
+        $query->execute([$row['name'], $row['score']]);
+
+        $sql = 'DELETE FROM `gold` where `score` = ?';
+        $query = $pdo->prepare($sql);
+        $query->execute([$row['score']]);
+      }
+
+      elseif ($num_silver > 2) {
+        $row = $query_silver->fetch(PDO::FETCH_ASSOC);
+        $sql = 'INSERT INTO bronze(name, score) VALUES(?, ?)';
+        $query = $pdo->prepare($sql);
+        $query->execute([$row['name'], $row['score']]);
+
+        $sql = 'DELETE FROM `silver` where `score` = ?';
+        $query = $pdo->prepare($sql);
+        $query->execute([$row['score']]);
+      }
+      elseif ($num_bronze > 2) {
+        $row = $query_bronze->fetch(PDO::FETCH_ASSOC);
+        $sql = 'DELETE FROM `bronze` where `score` = ?';
+        $query = $pdo->prepare($sql);
+        $query->execute([$row['score']]);
+      }
+        //$row['name']
+          /*  $sql = "INSERT INTO 'silver' (id, name, score) VALUES (:id, :name, :score)";
+            $query = $pdo->prepare($sql);
+            $query->execute([$row]);}*/
+     //$sql_gold = 'INSERT INTO `silver` select * from `gold` where `score` = ?';
+    //$query_gold  = $pdo->prepare($sql_gold);
+    //$query_gold ->execute([$min_gold]);
+     //$query = $pdo->query("INSERT INTO `silver` select * from `gold` where `score` = `$min_gold`");
+  //  DELETE FROM `gold` where `score` = ?
+
+
 
   /*  if ($num_gold > 2)
       {

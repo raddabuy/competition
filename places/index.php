@@ -52,10 +52,11 @@
              <br><br>
 
                 <button type="submit" id="send" class="btn btn-success mt-3">Сохранить</button>
-              
+
                 </form>
 
               <input type="button" id="count" class="btn btn-success mt-3" value="Количество участников">
+            
               <!--<div id="people"><?=$num?></div>
               <div id="people"></div>
               <script type="text/javascript">
