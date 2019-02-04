@@ -56,7 +56,13 @@
                 </form>
 
               <input type="button" id="count" class="btn btn-success mt-3" value="Количество участников">
-            
+
+              <form action="del.php" method="post">
+                <label for="del">Имя участника</label>
+                <input type="text" name="del" id="del" class="form-control">
+                 <button type="submit" id="send1" class="btn btn-success mt-3">Удалить</button>
+               </form>
+
               <!--<div id="people"><?=$num?></div>
               <div id="people"></div>
               <script type="text/javascript">

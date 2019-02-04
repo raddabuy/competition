@@ -13,9 +13,9 @@
     $sex = trim(filter_var($_POST['sex'], FILTER_SANITIZE_STRING));
 
 
-  /*  $sql = 'INSERT INTO competition(name, score, sex) VALUES(?, ?, ?)';
+    $sql = 'INSERT INTO list(name, score) VALUES(?, ?)';
     $query = $pdo->prepare($sql);
-    $query->execute([$name, $score, $sex]);*/
+    $query->execute([$name, $score]);
 
     $sql_gold = 'SELECT * FROM `gold`';
     $query_gold  = $pdo->prepare($sql_gold);
@@ -59,6 +59,12 @@
                     {$sql = 'INSERT INTO bronze(name, score) VALUES(?, ?)';
                     $query = $pdo->prepare($sql);
                     $query->execute([$name, $score]);}
+                else {
+                  $sql = 'INSERT INTO outside(name, score) VALUES(?, ?)';
+                  $query = $pdo->prepare($sql);
+                  $query->execute([$name, $score]);                  
+                }
+
 
     //делаем смещения в таблицах, если произошло переполнение
     $sql_gold = 'SELECT * FROM `gold` ORDER BY `score` ASC';
@@ -89,63 +95,80 @@
         $sql = 'DELETE FROM `gold` where `score` = ?';
         $query = $pdo->prepare($sql);
         $query->execute([$row['score']]);
+
+        $sql_silver = 'SELECT * FROM `silver` ORDER BY `score` ASC';
+        $query_silver  = $pdo->prepare($sql_silver);
+        $query_silver ->execute();
+        $num_silver  = $query_silver ->rowCount();
+
+        if ($num_silver > 2) {
+          $row = $query_silver->fetch(PDO::FETCH_ASSOC);
+          $sql = 'INSERT INTO bronze(name, score) VALUES(?, ?)';
+          $query = $pdo->prepare($sql);
+          $query->execute([$row['name'], $row['score']]);
+
+          $sql = 'DELETE FROM `silver` where `score` = ?';
+          $query = $pdo->prepare($sql);
+          $query->execute([$row['score']]);
+
+          $sql_bronze = 'SELECT * FROM `bronze` ORDER BY `score` ASC';
+          $query_bronze  = $pdo->prepare($sql_bronze);
+          $query_bronze ->execute();
+          $num_bronze  = $query_bronze ->rowCount();
+        }
+          if ($num_bronze > 2) {
+              $row = $query_bronze->fetch(PDO::FETCH_ASSOC);
+              $sql = 'INSERT INTO outside(name, score) VALUES(?, ?)';
+              $query = $pdo->prepare($sql);
+              $query->execute([$row['name'], $row['score']]);
+
+              $sql = 'DELETE FROM `bronze` where `score` = ?';
+              $query = $pdo->prepare($sql);
+              $query->execute([$row['score']]);
+            }
+
+
+
+
       }
 
-      elseif ($num_silver > 2) {
-        $row = $query_silver->fetch(PDO::FETCH_ASSOC);
-        $sql = 'INSERT INTO bronze(name, score) VALUES(?, ?)';
-        $query = $pdo->prepare($sql);
-        $query->execute([$row['name'], $row['score']]);
-
-        $sql = 'DELETE FROM `silver` where `score` = ?';
-        $query = $pdo->prepare($sql);
-        $query->execute([$row['score']]);
-      }
-      elseif ($num_bronze > 2) {
-        $row = $query_bronze->fetch(PDO::FETCH_ASSOC);
-        $sql = 'DELETE FROM `bronze` where `score` = ?';
-        $query = $pdo->prepare($sql);
-        $query->execute([$row['score']]);
-      }
-        //$row['name']
-          /*  $sql = "INSERT INTO 'silver' (id, name, score) VALUES (:id, :name, :score)";
+          elseif ($num_silver > 2) {
+            $row = $query_silver->fetch(PDO::FETCH_ASSOC);
+            $sql = 'INSERT INTO bronze(name, score) VALUES(?, ?)';
             $query = $pdo->prepare($sql);
-            $query->execute([$row]);}*/
-     //$sql_gold = 'INSERT INTO `silver` select * from `gold` where `score` = ?';
-    //$query_gold  = $pdo->prepare($sql_gold);
-    //$query_gold ->execute([$min_gold]);
-     //$query = $pdo->query("INSERT INTO `silver` select * from `gold` where `score` = `$min_gold`");
-  //  DELETE FROM `gold` where `score` = ?
+            $query->execute([$row['name'], $row['score']]);
 
+            $sql = 'DELETE FROM `silver` where `score` = ?';
+            $query = $pdo->prepare($sql);
+            $query->execute([$row['score']]);
 
+            $sql_bronze = 'SELECT * FROM `bronze` ORDER BY `score` ASC';
+            $query_bronze  = $pdo->prepare($sql_bronze);
+            $query_bronze ->execute();
+            $num_bronze  = $query_bronze ->rowCount();
 
-  /*  if ($num_gold > 2)
-      {
-        $sql = 'SELECT * FROM `gold` WHERE `score` = $min_gold';
-        $query = $pdo->query($sql);
-        $shift_gold = $query->fetch(PDO::FETCH_OBJ);
+            if ($num_bronze > 2) {
+              $row = $query_bronze->fetch(PDO::FETCH_ASSOC);
+              $sql = 'INSERT INTO outside(name, score) VALUES(?, ?)';
+              $query = $pdo->prepare($sql);
+              $query->execute([$row['name'], $row['score']]);
 
-        $sql = 'INSERT INTO silver(name, score) VALUES(?, ?)';
-        $query = $pdo->prepare($sql);
-        $query->execute([$shift_gold->name, $shift_gold->score]);
+              $sql = 'DELETE FROM `bronze` where `score` = ?';
+              $query = $pdo->prepare($sql);
+              $query->execute([$row['score']]);
+            }
+          }
 
-      }
+              elseif ($num_bronze > 2) {
+                $row = $query_bronze->fetch(PDO::FETCH_ASSOC);
+                $sql = 'INSERT INTO outside(name, score) VALUES(?, ?)';
+                $query = $pdo->prepare($sql);
+                $query->execute([$row['name'], $row['score']]);
 
-if (count(gold)>3)
-	{участник B (балл = min(gold)) -> копируем в B;
-	удаляем участника из таблицы B;
-	insert B into silver;
-	}
-else if (count(silver)>3)
-{участник B (балл = min(silver)) -> копируем в B;
-	удаляем участника из таблицы B;
-	insert B into bronze;
-}
-else if (count(bronze)>3)
-	{участник B (балл = min(bronze)) -> копируем в B;
-		удаляем участника из таблицы B;
-		 insert B into outside;
-	}*/
+                $sql = 'DELETE FROM `bronze` where `score` = ?';
+                $query = $pdo->prepare($sql);
+                $query->execute([$row['score']]);
+              }
 
     header('Location:index.php');
 
