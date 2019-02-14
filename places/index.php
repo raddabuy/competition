@@ -63,16 +63,6 @@
                  <button type="submit" id="send1" class="btn btn-success mt-3">Удалить</button>
                </form>
 
-              <!--<div id="people"><?=$num?></div>
-              <div id="people"></div>
-              <script type="text/javascript">
-                document.getElementById('count').onclick = function() {
-                    document.getElementById('people').innerHTML = <?=$min?>;
-                    }
-              </script>-->
-
-
-            <!-- <button type="submit" id="tables" class="btn btn-success mt-5">Посмотреть рейтинг</button>-->
           </div>
 
 </body>

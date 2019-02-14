@@ -10,7 +10,7 @@
 
     $name = trim(filter_var($_POST['name'], FILTER_SANITIZE_STRING));
     $score = trim(filter_var($_POST['score'], FILTER_SANITIZE_STRING));
-  
+
 
 
 
@@ -79,7 +79,6 @@
         return $row;
       }
 
-
       function delete($table, $row)
       {
         global $pdo;
@@ -98,52 +97,26 @@
         insert($to,$name, $score);
 
         delete($from, $row);
-
       }
 
 
-
-
     if (number('gold')  > 2) {
-
         shift('gold', 'silver', $row);
-
-
         if (number('silver') > 2) {
-
-
-          shift('silver', 'bronze', $row);
-
-
+            shift('silver', 'bronze', $row);
           if (number('bronze') > 2) {
-
-
                 shift('bronze', 'outside', $row);
-
-
             }
           }
       }
           elseif (number('silver') > 2) {
-
-
             shift('silver', 'bronze', $row);
-
             if (number('bronze')  > 2) {
-
-
               shift('bronze', 'outside', $row);
-
-
             }
           }
               elseif (number('bronze') > 2) {
-
-
                 shift('bronze', 'outside', $row);
-
-
-
               }
 
     header('Location:index.php');
