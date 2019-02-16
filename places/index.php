@@ -63,6 +63,8 @@
                  <button type="submit" id="send1" class="btn btn-success mt-3">Удалить</button>
                </form>
 
+               <p> <a href="tab_index.php">Показать списки</a></p>
+
           </div>
 
 </body>
