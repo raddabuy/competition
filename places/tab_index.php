@@ -54,10 +54,16 @@
             $query->execute();
 
         // выводим в HTML-таблицу все данные клиентов из таблицы MySQL
-         while($row = $query->fetch(PDO::FETCH_ASSOC)){
+         while($row = $query->fetch(PDO::FETCH_OBJ)){
            echo '<tr>';
-           echo '<td>' . $row['name'] . '</td>';
-           echo '<td>' . $row['score'] . '</td>';
+           echo '<td>' . $row->name . '</td>';
+           echo '<td>' . $row->score . '</td>';
+          // echo  '<td> <a href="index.php">Редактировать</a> </td>';
+          echo "<td>
+            <a href='edit.php?id=$row->id'>
+               <button>Редактировать</button>
+             </a>
+           </td>";
            echo '</tr>';
          }
 
@@ -100,6 +106,7 @@
            echo '<tr>';
            echo '<td>' . $row['name'] . '</td>';
            echo '<td>' . $row['score'] . '</td>';
+        //   echo  '<td> <a href="index.php">Редактировать</a> </td>';
            echo '</tr>';
          }
 
@@ -142,6 +149,7 @@
            echo '<tr>';
            echo '<td>' . $row['name'] . '</td>';
            echo '<td>' . $row['score'] . '</td>';
+          // echo  '<td> <a href="index.php">Редактировать</a> </td>';
            echo '</tr>';
          }
 
@@ -184,6 +192,7 @@
            echo '<tr>';
            echo '<td>' . $row['name'] . '</td>';
            echo '<td>' . $row['score'] . '</td>';
+           //echo  '<td> <a href="index.php">Редактировать</a> </td>';
            echo '</tr>';
          }
 
@@ -227,6 +236,7 @@
          echo '<tr>';
          echo '<td>' . $row['name'] . '</td>';
          echo '<td>' . $row['score'] . '</td>';
+        // echo  '<td> <a href="index.php">Редактировать</a> </td>';
          echo '</tr>';
        }
 
